@@ -1,0 +1,12 @@
+com/example/postech_tc4_pedido/gateway/kafka/PedidoConsumerTest.class
+com/example/postech_tc4_pedido/exception/PedidoNaoEncontradoExceptionTest.class
+com/example/postech_tc4_pedido/usecases/BaixarEstoqueUseCaseTest.class
+com/example/postech_tc4_pedido/controller/AtualizacaoPagamentoControllerTest.class
+com/example/postech_tc4_pedido/usecases/SalvarPedidoPendentePagamentoUseCaseTest.class
+com/example/postech_tc4_pedido/usecases/CalcularValorTotalPedidoUseCaseTest.class
+com/example/postech_tc4_pedido/usecases/SalvarPedidoSemEstoqueUseCaseTest.class
+com/example/postech_tc4_pedido/config/KafkaConfigTest.class
+com/example/postech_tc4_pedido/PostechTc4PedidoApplicationTests.class
+com/example/postech_tc4_pedido/domain/StatusPedidoEnumTest.class
+com/example/postech_tc4_pedido/usecases/BuscarProdutosUseCaseTest.class
+com/example/postech_tc4_pedido/usecases/BuscarEstoqueUseCaseTest.class

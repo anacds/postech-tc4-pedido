@@ -1,8 +1,7 @@
 package com.example.postech_tc4_pedido.usecases;
 
 import com.example.postech_tc4_pedido.dto.ProdutoDTO;
-import com.example.postech_tc4_pedido.gateway.database.entity.ProdutoEntity;
-import com.example.postech_tc4_pedido.gateway.external.ProdutoClient;
+import com.example.postech_tc4_pedido.gateway.external.interfaces.IProdutoGateway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,41 +13,40 @@ import static org.mockito.Mockito.*;
 
 class BuscarProdutosUseCaseTest {
 
-    private ProdutoClient produtoClient;
+    private IProdutoGateway produtoGateway;
     private BuscarProdutosUseCase buscarProdutosUseCase;
 
     @BeforeEach
     void setUp() {
-        produtoClient = mock(ProdutoClient.class);
-        buscarProdutosUseCase = new BuscarProdutosUseCase(produtoClient);
+        produtoGateway = mock(IProdutoGateway.class);
+        buscarProdutosUseCase = new BuscarProdutosUseCase(produtoGateway);
     }
 
     @Test
-    void deveBuscarProdutosPorSkusComSucesso() {
-        String sku1 = "ABC123";
-        String sku2 = "DEF456";
+    void deveRetornarListaDeProdutosEntityQuandoBuscarPorSkus() {
+        var produtoDTO1 = new ProdutoDTO("SKU1", 2, "Nome1", "123", "desc", "fab", BigDecimal.TEN, "cat");
+        var produtoDTO2 = new ProdutoDTO("SKU2", 1, "Nome2", "456", "desc", "fab", BigDecimal.ONE, "cat");
 
-        ProdutoDTO produto1 = new ProdutoDTO(sku1, 2, "Produto 1", "123456789", "Descrição 1", "Fabricante 1", new BigDecimal("10.50"), "Categoria 1");
-        ProdutoDTO produto2 = new ProdutoDTO(sku2, 1, "Produto 2", "987654321", "Descrição 2", "Fabricante 2", new BigDecimal("20.00"), "Categoria 2");
+        when(produtoGateway.buscarProdutoPorSku("SKU1")).thenReturn(produtoDTO1);
+        when(produtoGateway.buscarProdutoPorSku("SKU2")).thenReturn(produtoDTO2);
 
-        when(produtoClient.buscarProdutoPorSku(sku1)).thenReturn(produto1);
-        when(produtoClient.buscarProdutoPorSku(sku2)).thenReturn(produto2);
-
-        List<ProdutoEntity> resultado = buscarProdutosUseCase.buscarPorSkus(List.of(sku1, sku2));
+        var resultado = buscarProdutosUseCase.buscarPorSkus(List.of(produtoDTO1, produtoDTO2));
 
         assertEquals(2, resultado.size());
-        assertEquals("Produto 1", resultado.get(0).getNome());
-        assertEquals("Produto 2", resultado.get(1).getNome());
-
-        verify(produtoClient, times(1)).buscarProdutoPorSku(sku1);
-        verify(produtoClient, times(1)).buscarProdutoPorSku(sku2);
+        assertEquals("SKU1", resultado.get(0).getSku());
+        assertEquals(2, resultado.get(0).getQuantidade());
+        assertEquals("SKU2", resultado.get(1).getSku());
+        assertEquals(1, resultado.get(1).getQuantidade());
     }
 
     @Test
     void deveRetornarListaVaziaEmCasoDeErro() {
-        when(produtoClient.buscarProdutoPorSku(anyString())).thenThrow(new RuntimeException("Erro"));
-        List<ProdutoEntity> resultado = buscarProdutosUseCase.buscarPorSkus(List.of("SKU-ERRO"));
+        var produtoDTO = new ProdutoDTO("ERRO", 1, "ProdutoErro", "000", "desc", "fab", BigDecimal.ONE, "cat");
+
+        when(produtoGateway.buscarProdutoPorSku("ERRO")).thenThrow(new RuntimeException("Falha"));
+
+        var resultado = buscarProdutosUseCase.buscarPorSkus(List.of(produtoDTO));
+
         assertTrue(resultado.isEmpty());
-        verify(produtoClient, times(1)).buscarProdutoPorSku("SKU-ERRO");
     }
 }

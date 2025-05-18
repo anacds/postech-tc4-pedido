@@ -1,66 +1,97 @@
 package com.example.postech_tc4_pedido.usecases;
 
+import com.example.postech_tc4_pedido.domain.StatusPedidoEnum;
+import com.example.postech_tc4_pedido.dto.ClienteDTO;
+import com.example.postech_tc4_pedido.dto.PagamentoDTO;
 import com.example.postech_tc4_pedido.dto.PedidoDTO;
 import com.example.postech_tc4_pedido.dto.ProdutoDTO;
-import com.example.postech_tc4_pedido.gateway.external.EstoqueClient;
+import com.example.postech_tc4_pedido.gateway.external.interfaces.IEstoqueGateway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class BuscarEstoqueUseCaseTest {
 
-    private EstoqueClient estoqueClient;
+    private IEstoqueGateway estoqueGateway;
     private BuscarEstoqueUseCase buscarEstoqueUseCase;
 
     @BeforeEach
     void setUp() {
-        estoqueClient = mock(EstoqueClient.class);
-        buscarEstoqueUseCase = new BuscarEstoqueUseCase(estoqueClient);
+        estoqueGateway = mock(IEstoqueGateway.class);
+        buscarEstoqueUseCase = new BuscarEstoqueUseCase(estoqueGateway);
     }
 
     @Test
-    void deveRetornarTrueQuandoTiverEstoqueDisponivel() {
-        var produto1 = new ProdutoDTO("SKU123", 2, "", "", "", "", new BigDecimal("0.00"), "");
-        var produto2 = new ProdutoDTO("SKU456", 1, "", "", "", "", new BigDecimal("0.00"), "");
-        var pedidoDTO = new PedidoDTO(null, null, null, List.of(produto1, produto2), null, null, null);
+    void deveRetornarTrueQuandoTodosOsProdutosTiveremEstoqueDisponivel() {
+        var produto1 = new ProdutoDTO("SKU1", 2, "Nome1", "123", "desc", "fab", BigDecimal.TEN, "cat");
+        var produto2 = new ProdutoDTO("SKU2", 1, "Nome2", "456", "desc", "fab", BigDecimal.ONE, "cat");
 
-        when(estoqueClient.verificarQuantidadeDisponivel("SKU123")).thenReturn(3);
-        when(estoqueClient.verificarQuantidadeDisponivel("SKU456")).thenReturn(2);
+        when(estoqueGateway.verificarQuantidadeDisponivel("SKU1")).thenReturn(5);
+        when(estoqueGateway.verificarQuantidadeDisponivel("SKU2")).thenReturn(2);
 
-        boolean disponivel = buscarEstoqueUseCase.verificarDisponibilidade(pedidoDTO);
+        var pedido = new PedidoDTO(
+                UUID.randomUUID().toString(),
+                UUID.randomUUID().toString(),
+                new ClienteDTO("João", "12345678900"),
+                List.of(produto1, produto2),
+                new PagamentoDTO("4111111111111111"),
+                StatusPedidoEnum.ABERTO,
+                BigDecimal.ZERO
+        );
 
-        assertTrue(disponivel);
+        boolean resultado = buscarEstoqueUseCase.verificarDisponibilidade(pedido);
+
+        assertTrue(resultado);
     }
 
     @Test
-    void deveRetornarFalseQuandoNaoTiverEstoqueDisponivel() {
-        var produto1 = new ProdutoDTO("SKU123", 2, "", "", "", "", new BigDecimal("0.00"), "");
-        var produto2 = new ProdutoDTO("SKU456", 5, "", "", "", "", new BigDecimal("0.00"), "");
-        var pedidoDTO = new PedidoDTO(null, null, null, List.of(produto1, produto2), null, null, null);
+    void deveRetornarFalseQuandoAlgumProdutoNaoTiverEstoqueSuficiente() {
+        var produto1 = new ProdutoDTO("SKU1", 2, "Nome1", "123", "desc", "fab", BigDecimal.TEN, "cat");
+        var produto2 = new ProdutoDTO("SKU2", 3, "Nome2", "456", "desc", "fab", BigDecimal.ONE, "cat");
 
-        when(estoqueClient.verificarQuantidadeDisponivel("SKU123")).thenReturn(2);
-        when(estoqueClient.verificarQuantidadeDisponivel("SKU456")).thenReturn(3);
+        when(estoqueGateway.verificarQuantidadeDisponivel("SKU1")).thenReturn(5);
+        when(estoqueGateway.verificarQuantidadeDisponivel("SKU2")).thenReturn(2); // insuficiente
 
-        boolean disponivel = buscarEstoqueUseCase.verificarDisponibilidade(pedidoDTO);
+        var pedido = new PedidoDTO(
+                UUID.randomUUID().toString(),
+                UUID.randomUUID().toString(),
+                new ClienteDTO("João", "12345678900"),
+                List.of(produto1, produto2),
+                new PagamentoDTO("4111111111111111"),
+                StatusPedidoEnum.ABERTO,
+                BigDecimal.ZERO
+        );
 
-        assertFalse(disponivel);
+        boolean resultado = buscarEstoqueUseCase.verificarDisponibilidade(pedido);
+
+        assertFalse(resultado);
     }
 
     @Test
-    void deveRetornarFalseQuandoHouverExcecao() {
-        var produto = new ProdutoDTO("SKU123", 1, "", "", "", "", new BigDecimal("0.00"), "");
-        var pedidoDTO = new PedidoDTO(null, null, null, List.of(produto), null, null, null);
+    void deveRetornarFalseQuandoOcorreExcecao() {
+        var produto = new ProdutoDTO("SKU_ERRADO", 1, "Nome", "123", "desc", "fab", BigDecimal.ONE, "cat");
 
-        when(estoqueClient.verificarQuantidadeDisponivel("SKU123"))
-                .thenThrow(new RuntimeException("Erro inesperado"));
+        when(estoqueGateway.verificarQuantidadeDisponivel("SKU_ERRADO"))
+                .thenThrow(new RuntimeException("Erro no estoque"));
 
-        boolean disponivel = buscarEstoqueUseCase.verificarDisponibilidade(pedidoDTO);
+        var pedido = new PedidoDTO(
+                UUID.randomUUID().toString(),
+                UUID.randomUUID().toString(),
+                new ClienteDTO("Erro", "00000000000"),
+                List.of(produto),
+                new PagamentoDTO("4111111111111111"),
+                StatusPedidoEnum.ABERTO,
+                BigDecimal.ZERO
+        );
 
-        assertFalse(disponivel);
+        boolean resultado = buscarEstoqueUseCase.verificarDisponibilidade(pedido);
+
+        assertFalse(resultado);
     }
 }

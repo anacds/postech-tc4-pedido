@@ -2,29 +2,29 @@ package com.example.postech_tc4_pedido.usecases;
 
 import com.example.postech_tc4_pedido.domain.StatusPedidoEnum;
 import com.example.postech_tc4_pedido.dto.AtualizacaoPagamentoDTO;
-import com.example.postech_tc4_pedido.gateway.database.repository.PedidoRepository;
-import com.example.postech_tc4_pedido.gateway.external.EstoqueClient;
+import com.example.postech_tc4_pedido.exception.PedidoNaoEncontradoException;
+import com.example.postech_tc4_pedido.gateway.database.interfaces.IPedidoGateway;
+import com.example.postech_tc4_pedido.gateway.external.interfaces.IEstoqueGateway;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AtualizarPagamentoUseCase {
 
-    private final PedidoRepository pedidoRepository;
-    private final EstoqueClient estoqueClient;
+    private final IPedidoGateway pedidoGateway;
+    private final IEstoqueGateway estoqueGateway;
 
-    public AtualizarPagamentoUseCase(PedidoRepository pedidoRepository,
-                                     EstoqueClient estoqueClient
+    public AtualizarPagamentoUseCase(IPedidoGateway pedidoGateway,
+                                     IEstoqueGateway estoqueGateway
     ) {
-        this.pedidoRepository = pedidoRepository;
-        this.estoqueClient = estoqueClient;
+        this.pedidoGateway = pedidoGateway;
+        this.estoqueGateway = estoqueGateway;
     }
 
     public void atualizar(AtualizacaoPagamentoDTO dto) {
-        var pedidoBusca = pedidoRepository.findById(dto.pedidoId());
+        var pedidoBusca = pedidoGateway.buscarPorId(dto.pedidoId());
 
         if (pedidoBusca.isEmpty()) {
-            System.err.println("Pedido não encontrado: " + dto.pedidoId());
-            return;
+            throw new PedidoNaoEncontradoException(dto.pedidoId());
         }
 
         var pedido = pedidoBusca.get();
@@ -32,7 +32,7 @@ public class AtualizarPagamentoUseCase {
             pedido.setStatus(StatusPedidoEnum.FECHADO_COM_SUCESSO);
         } else {
             pedido.getProdutos().forEach(produto ->
-                    estoqueClient.reporEstoque(produto.getSku(), produto.getQuantidade())
+                    estoqueGateway.reporEstoque(produto.getSku(), produto.getQuantidade())
             );
 
             if(dto.statusPagamento().equals("PROCESSADO_SEM_CREDITO")) {
@@ -42,7 +42,7 @@ public class AtualizarPagamentoUseCase {
             }
         }
 
-        pedidoRepository.save(pedido);
+        pedidoGateway.salvar(pedido);
     }
 
 }

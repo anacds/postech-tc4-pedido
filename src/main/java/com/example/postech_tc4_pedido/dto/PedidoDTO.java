@@ -9,7 +9,7 @@ public record PedidoDTO (String id,
                          String idEvento,
                          ClienteDTO cliente,
                         List<ProdutoDTO> produtos,
-                        PagamentoDTO pagamento,
+                        PagamentoDTO dadosPagamento,
                         StatusPedidoEnum status,
                          BigDecimal valorTotalPedido) {
 }

@@ -5,7 +5,7 @@ import org.springframework.data.annotation.Id;
 import java.math.BigDecimal;
 
 public class ProdutoEntity {
-    @Id
+
     private String sku;
     private int quantidade;
     private String nome;

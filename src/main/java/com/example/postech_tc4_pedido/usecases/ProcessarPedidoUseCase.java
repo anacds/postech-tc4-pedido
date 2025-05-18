@@ -6,7 +6,6 @@ import com.example.postech_tc4_pedido.gateway.database.entity.ProdutoEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ProcessarPedidoUseCase {
@@ -41,10 +40,6 @@ public class ProcessarPedidoUseCase {
 
     public void processar(PedidoDTO pedidoDTO) {
         try {
-            List<String> skus = pedidoDTO.produtos().stream()
-                    .map(p -> p.sku())
-                    .collect(Collectors.toList());
-
             var valorTotal = calcularValorTotalPedidoUseCase.calcular(pedidoDTO);
 
             // #1: obtém dados do produto
@@ -52,6 +47,7 @@ public class ProcessarPedidoUseCase {
 
             // #2: obtém dados do cliente
             String cpf = pedidoDTO.cliente().cpf();
+            //ClienteEntity cliente = new ClienteEntity("Ana", "99999999999");
             ClienteEntity cliente = buscarClienteUseCase.buscar(cpf);
 
             // #3: baixa estoque

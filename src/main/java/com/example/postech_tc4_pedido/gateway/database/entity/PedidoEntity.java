@@ -15,7 +15,7 @@ public class PedidoEntity {
     public String idEvento;
     private ClienteEntity cliente;
     private List<ProdutoEntity> produtos;
-    private PagamentoEntity pagamento;
+    private PagamentoEntity dadosPagamento;
     private StatusPedidoEnum status;
     private BigDecimal valorTotalPedido;
 
@@ -27,7 +27,7 @@ public class PedidoEntity {
                         String idEvento,
                         ClienteEntity cliente,
                         List<ProdutoEntity> produtos,
-                        PagamentoEntity pagamento,
+                        PagamentoEntity dadosPagamento,
                         StatusPedidoEnum status,
                         BigDecimal valorTotalPedido) {
         super();
@@ -35,7 +35,7 @@ public class PedidoEntity {
         this.idEvento = idEvento;
         this.cliente = cliente;
         this.produtos = produtos;
-        this.pagamento = pagamento;
+        this.dadosPagamento = dadosPagamento;
         this.status = status;
         this.valorTotalPedido = valorTotalPedido;
     }
@@ -73,11 +73,11 @@ public class PedidoEntity {
     }
 
     public PagamentoEntity getPagamento() {
-        return pagamento;
+        return dadosPagamento;
     }
 
-    public void setPagamento(PagamentoEntity pagamento) {
-        this.pagamento = pagamento;
+    public void setPagamento(PagamentoEntity dadosPagamento) {
+        this.dadosPagamento = dadosPagamento;
     }
 
     public StatusPedidoEnum getStatus() {
