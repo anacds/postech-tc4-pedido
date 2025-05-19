@@ -17,16 +17,16 @@ public class SolicitarPagamentoUseCase {
 
     public void solicitar(PedidoDTO pedidoDTO, BigDecimal valorTotal){
         try {
-<span class="nc" id="L20">            var solicitacao = new SolicitacaoPagamentoDTO(</span>
-<span class="nc" id="L21">                    pedidoDTO.id(),</span>
+<span class="fc" id="L20">            var solicitacao = new SolicitacaoPagamentoDTO(</span>
+<span class="fc" id="L21">                    pedidoDTO.id(),</span>
                     valorTotal,
-<span class="nc" id="L23">                    pedidoDTO.dadosPagamento().numeroCartao()</span>
+<span class="fc" id="L23">                    pedidoDTO.dadosPagamento().numeroCartao()</span>
             );
 
-<span class="nc" id="L26">            pagamentoGateway.solicitarPagamento(solicitacao);</span>
+<span class="fc" id="L26">            pagamentoGateway.solicitarPagamento(solicitacao);</span>
 <span class="nc" id="L27">        } catch (Exception e) {</span>
 <span class="nc" id="L28">            e.printStackTrace();</span>
-<span class="nc" id="L29">        }</span>
-<span class="nc" id="L30">    }</span>
+<span class="fc" id="L29">        }</span>
+<span class="fc" id="L30">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

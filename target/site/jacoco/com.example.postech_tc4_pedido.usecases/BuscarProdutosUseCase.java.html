@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BuscarProdutosUseCase.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">postech-tc4-pedido</a> &gt; <a href="index.source.html" class="el_package">com.example.postech_tc4_pedido.usecases</a> &gt; <span class="el_source">BuscarProdutosUseCase.java</span></div><h1>BuscarProdutosUseCase.java</h1><pre class="source lang-java linenums">package com.example.postech_tc4_pedido.usecases;
 
+import com.example.postech_tc4_pedido.domain.Produto;
 import com.example.postech_tc4_pedido.dto.ProdutoDTO;
-import com.example.postech_tc4_pedido.gateway.database.entity.ProdutoEntity;
 import com.example.postech_tc4_pedido.gateway.external.interfaces.IProdutoGateway;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +16,12 @@ public class BuscarProdutosUseCase {
 <span class="fc" id="L16">        this.produtoGateway = produtoGateway;</span>
 <span class="fc" id="L17">    }</span>
 
-    public List&lt;ProdutoEntity&gt; buscarPorSkus(List&lt;ProdutoDTO&gt; produtosDTO) {
+    public List&lt;Produto&gt; buscarPorSkus(List&lt;ProdutoDTO&gt; produtosDTO) {
         try {
 <span class="fc" id="L21">            return produtosDTO.stream()</span>
 <span class="fc" id="L22">                    .map(produtoDTO -&gt; {</span>
 <span class="fc" id="L23">                        var p = produtoGateway.buscarProdutoPorSku(produtoDTO.sku());</span>
-<span class="fc" id="L24">                        return new ProdutoEntity(</span>
+<span class="fc" id="L24">                        return new Produto(</span>
 <span class="fc" id="L25">                                p.sku(),</span>
 <span class="fc" id="L26">                                produtoDTO.quantidade(),</span>
 <span class="fc" id="L27">                                p.nome(),</span>

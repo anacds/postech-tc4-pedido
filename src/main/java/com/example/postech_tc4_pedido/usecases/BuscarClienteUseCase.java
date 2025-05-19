@@ -1,6 +1,6 @@
 package com.example.postech_tc4_pedido.usecases;
 
-import com.example.postech_tc4_pedido.gateway.database.entity.ClienteEntity;
+import com.example.postech_tc4_pedido.domain.Cliente;
 import com.example.postech_tc4_pedido.gateway.external.interfaces.IClienteGateway;
 import org.springframework.stereotype.Service;
 
@@ -13,10 +13,10 @@ public class BuscarClienteUseCase {
         this.clienteGateway = clienteGateway;
     }
 
-    public ClienteEntity buscar(String cpf) {
+    public Cliente buscar(String cpf) {
         try {
             var clienteDTO = clienteGateway.buscarClientePorCpf(cpf);
-            return new ClienteEntity(
+            return new Cliente(
                     clienteDTO.nome(),
                     clienteDTO.cpf()
             );

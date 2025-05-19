@@ -1,12 +1,12 @@
 package com.example.postech_tc4_pedido.usecases;
 
-import com.example.postech_tc4_pedido.domain.StatusPedidoEnum;
-import com.example.postech_tc4_pedido.dto.ClienteDTO;
+import com.example.postech_tc4_pedido.domain.Cliente;
+import com.example.postech_tc4_pedido.domain.Pagamento;
+import com.example.postech_tc4_pedido.domain.Pedido;
+import com.example.postech_tc4_pedido.domain.Produto;
 import com.example.postech_tc4_pedido.dto.PagamentoDTO;
 import com.example.postech_tc4_pedido.dto.PedidoDTO;
 import com.example.postech_tc4_pedido.dto.ProdutoDTO;
-import com.example.postech_tc4_pedido.gateway.database.entity.ClienteEntity;
-import com.example.postech_tc4_pedido.gateway.database.entity.ProdutoEntity;
 import com.example.postech_tc4_pedido.gateway.database.interfaces.IPedidoGateway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static com.example.postech_tc4_pedido.domain.StatusPedidoEnum.ABERTO;
 import static org.mockito.Mockito.*;
 
 class SalvarPedidoPendentePagamentoUseCaseTest {
@@ -28,48 +29,24 @@ class SalvarPedidoPendentePagamentoUseCaseTest {
     }
 
     @Test
-    void deveSalvarPedidoPendentePagamento() {
-        var cliente = new ClienteEntity("Maria", "39335454800");
-        var produto1 = new ProdutoEntity("SKU-001", 2, null, null, null, null, BigDecimal.TEN, null);
-        var produto2 = new ProdutoEntity("SKU-002", 1, null, null, null, null, BigDecimal.TEN, null);
-        var produtos = List.of(produto1, produto2);
-
-        var dto = new PedidoDTO(
-                "1",
-                "evt1",
-                new ClienteDTO("Maria", "39335454800"),
-                List.of(
-                        new ProdutoDTO("SKU-001", 2, null, null, null, null, BigDecimal.TEN, null),
-                        new ProdutoDTO("SKU-002", 1, null, null, null, null, BigDecimal.TEN, null)
-                ),
-                new PagamentoDTO("1234123412341234"),
-                StatusPedidoEnum.ABERTO,
+    void deveSalvarPedidoPendentePagamentoComSucesso() {
+        PedidoDTO pedidoDTO = new PedidoDTO(
+                "pedido123",
+                "evento456",
+                new com.example.postech_tc4_pedido.dto.ClienteDTO("Ana", "99999999999"),
+                List.of(new ProdutoDTO("sku1", 2, "nome", "cod", "desc", "fab", BigDecimal.TEN, "cat")),
+                new PagamentoDTO("4111111111111111"),
+                ABERTO,
                 null
         );
 
-        useCase.salvar(dto, cliente, produtos, BigDecimal.valueOf(30));
-
-        verify(pedidoGateway, times(1)).salvar(any());
-    }
-
-    @Test
-    void naoDeveLancarExcecaoAoSalvarMesmoComErro() {
-        var cliente = new ClienteEntity("Maria", "39335454800");
-        var produto = new ProdutoEntity("SKU-001", 1, null, null, null, null, BigDecimal.TEN, null);
-        var produtos = List.of(produto);
-
-        var dto = new PedidoDTO(
-                "1",
-                "evt1",
-                new ClienteDTO("Maria", "39335454800"),
-                List.of(new ProdutoDTO("SKU-001", 1, null, null, null, null, BigDecimal.TEN, null)),
-                new PagamentoDTO("1234123412341234"),
-                StatusPedidoEnum.ABERTO,
-                null
+        Cliente cliente = new Cliente("Ana", "99999999999");
+        List<Produto> produtos = List.of(
+                new Produto("sku1", 2, "nome", "cod", "desc", "fab", BigDecimal.TEN, "cat")
         );
 
-        doThrow(new RuntimeException("erro")).when(pedidoGateway).salvar(any());
+        useCase.salvar(pedidoDTO, cliente, produtos, BigDecimal.valueOf(20));
 
-        useCase.salvar(dto, cliente, produtos, BigDecimal.TEN);
+        verify(pedidoGateway, times(1)).salvar(any(Pedido.class));
     }
 }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProcessarPedidoUseCase.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">postech-tc4-pedido</a> &gt; <a href="index.source.html" class="el_package">com.example.postech_tc4_pedido.usecases</a> &gt; <span class="el_source">ProcessarPedidoUseCase.java</span></div><h1>ProcessarPedidoUseCase.java</h1><pre class="source lang-java linenums">package com.example.postech_tc4_pedido.usecases;
 
+import com.example.postech_tc4_pedido.domain.Cliente;
+import com.example.postech_tc4_pedido.domain.Produto;
 import com.example.postech_tc4_pedido.dto.PedidoDTO;
-import com.example.postech_tc4_pedido.gateway.database.entity.ClienteEntity;
-import com.example.postech_tc4_pedido.gateway.database.entity.ProdutoEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,35 +40,35 @@ public class ProcessarPedidoUseCase {
 
     public void processar(PedidoDTO pedidoDTO) {
         try {
-<span class="nc" id="L43">            var valorTotal = calcularValorTotalPedidoUseCase.calcular(pedidoDTO);</span>
+<span class="fc" id="L43">            var valorTotal = calcularValorTotalPedidoUseCase.calcular(pedidoDTO);</span>
 
             // #1: obtém dados do produto
-<span class="nc" id="L46">            List&lt;ProdutoEntity&gt; produtos = buscarProdutosUseCase.buscarPorSkus(pedidoDTO.produtos());</span>
+<span class="fc" id="L46">            List&lt;Produto&gt; produtos = buscarProdutosUseCase.buscarPorSkus(pedidoDTO.produtos());</span>
 
             // #2: obtém dados do cliente
-<span class="nc" id="L49">            String cpf = pedidoDTO.cliente().cpf();</span>
-            //ClienteEntity cliente = new ClienteEntity(&quot;Ana&quot;, &quot;99999999999&quot;);
-<span class="nc" id="L51">            ClienteEntity cliente = buscarClienteUseCase.buscar(cpf);</span>
+<span class="fc" id="L49">            String cpf = pedidoDTO.cliente().cpf();</span>
+<span class="fc" id="L50">            Cliente cliente = new Cliente(&quot;Ana&quot;, &quot;111&quot;);</span>
+            //Cliente cliente = buscarClienteUseCase.buscar(cpf);
 
             // #3: baixa estoque
-<span class="nc" id="L54">            boolean temEstoque = buscarEstoqueUseCase.verificarDisponibilidade(pedidoDTO);</span>
+<span class="fc" id="L54">            boolean temEstoque = buscarEstoqueUseCase.verificarDisponibilidade(pedidoDTO);</span>
 
-<span class="nc bnc" id="L56" title="All 2 branches missed.">            if (!temEstoque) {</span>
-<span class="nc" id="L57">                salvarPedidoSemEstoqueUseCase.salvar(pedidoDTO, cliente, produtos, valorTotal);</span>
-<span class="nc" id="L58">                return;</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">            if (!temEstoque) {</span>
+<span class="fc" id="L57">                salvarPedidoSemEstoqueUseCase.salvar(pedidoDTO, cliente, produtos, valorTotal);</span>
+<span class="fc" id="L58">                return;</span>
             }
-<span class="nc" id="L60">            baixarEstoqueUseCase.baixar(pedidoDTO);</span>
+<span class="fc" id="L60">            baixarEstoqueUseCase.baixar(pedidoDTO);</span>
 
             // #4: solicita pagamento
-<span class="nc" id="L63">            solicitarPagamentoUseCase.solicitar(pedidoDTO, valorTotal);</span>
+            //solicitarPagamentoUseCase.solicitar(pedidoDTO, valorTotal);
 
             // #5: save
             // se tudo der certo nos passos anteriores, o pedido é salvo com o status PENDENTE_PAGAMENTO
-<span class="nc" id="L67">            salvarPedidoPendentePagamentoUseCase.salvar(pedidoDTO, cliente, produtos, valorTotal);</span>
+<span class="fc" id="L67">            salvarPedidoPendentePagamentoUseCase.salvar(pedidoDTO, cliente, produtos, valorTotal);</span>
 
 <span class="nc" id="L69">        } catch (Exception e) {</span>
 <span class="nc" id="L70">            e.printStackTrace();</span>
-<span class="nc" id="L71">        }</span>
-<span class="nc" id="L72">    }</span>
+<span class="fc" id="L71">        }</span>
+<span class="fc" id="L72">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

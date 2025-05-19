@@ -4,7 +4,6 @@ import com.example.postech_tc4_pedido.dto.ClienteDTO;
 import com.example.postech_tc4_pedido.dto.PagamentoDTO;
 import com.example.postech_tc4_pedido.dto.PedidoDTO;
 import com.example.postech_tc4_pedido.dto.ProdutoDTO;
-import com.example.postech_tc4_pedido.domain.StatusPedidoEnum;
 import com.example.postech_tc4_pedido.gateway.external.interfaces.IProdutoGateway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,10 +11,11 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static com.example.postech_tc4_pedido.domain.StatusPedidoEnum.ABERTO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-class CalcularValorTotalPedidoUseCaseTest {
+public class CalcularValorTotalPedidoUseCaseTest {
 
     private IProdutoGateway produtoGateway;
     private CalcularValorTotalPedidoUseCase useCase;
@@ -28,27 +28,36 @@ class CalcularValorTotalPedidoUseCaseTest {
 
     @Test
     void deveCalcularValorTotalCorretamente() {
-        var produto1 = new ProdutoDTO("SKU1", 2, null, null, null, null, BigDecimal.TEN, null);
-        var produto2 = new ProdutoDTO("SKU2", 1, null, null, null, null, BigDecimal.valueOf(5), null);
-        var pedido = new PedidoDTO("1", "evt", new ClienteDTO("Ana", "123"), List.of(produto1, produto2), new PagamentoDTO("1111"), StatusPedidoEnum.ABERTO, null);
+        ProdutoDTO p1 = new ProdutoDTO("sku1", 2, null, null, null, null, null, null);
+        ProdutoDTO p2 = new ProdutoDTO("sku2", 1, null, null, null, null, null, null);
+        List<ProdutoDTO> produtos = List.of(p1, p2);
 
-        when(produtoGateway.buscarProdutoPorSku("SKU1")).thenReturn(produto1);
-        when(produtoGateway.buscarProdutoPorSku("SKU2")).thenReturn(produto2);
+        PedidoDTO pedido = new PedidoDTO("1", "evt1", new ClienteDTO("Ana", "123"),
+                produtos, new PagamentoDTO("4111111111111111"), ABERTO, null);
+
+        when(produtoGateway.buscarProdutoPorSku("sku1"))
+                .thenReturn(new ProdutoDTO("sku1", 0, "nome", "cod", "desc", "fab", BigDecimal.TEN, "cat"));
+        when(produtoGateway.buscarProdutoPorSku("sku2"))
+                .thenReturn(new ProdutoDTO("sku2", 0, "nome", "cod", "desc", "fab", BigDecimal.valueOf(5), "cat"));
 
         BigDecimal total = useCase.calcular(pedido);
 
         assertEquals(BigDecimal.valueOf(25), total);
+        verify(produtoGateway, times(1)).buscarProdutoPorSku("sku1");
+        verify(produtoGateway, times(1)).buscarProdutoPorSku("sku2");
     }
 
     @Test
-    void deveRetornarZeroEmCasoDeErro() {
-        var produto = new ProdutoDTO("SKU_ERR", 1, null, null, null, null, BigDecimal.ONE, null);
-        var pedido = new PedidoDTO("1", "evt", new ClienteDTO("Ana", "123"), List.of(produto), new PagamentoDTO("1111"), StatusPedidoEnum.ABERTO, null);
+    void deveRetornarZeroQuandoGatewayLancaExcecao() {
+        ProdutoDTO p = new ProdutoDTO("sku1", 2, null, null, null, null, null, null);
+        PedidoDTO pedido = new PedidoDTO("1", "evt1", new ClienteDTO("Ana", "123"),
+                List.of(p), new PagamentoDTO("4111111111111111"), ABERTO, null);
 
-        when(produtoGateway.buscarProdutoPorSku("SKU_ERR")).thenThrow(new RuntimeException("Erro"));
+        when(produtoGateway.buscarProdutoPorSku("sku1")).thenThrow(new RuntimeException("Erro"));
 
         BigDecimal total = useCase.calcular(pedido);
 
         assertEquals(BigDecimal.ZERO, total);
+        verify(produtoGateway, times(1)).buscarProdutoPorSku("sku1");
     }
 }

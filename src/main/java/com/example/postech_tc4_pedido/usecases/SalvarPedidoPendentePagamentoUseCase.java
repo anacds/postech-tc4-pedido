@@ -6,6 +6,12 @@ import com.example.postech_tc4_pedido.gateway.database.entity.ClienteEntity;
 import com.example.postech_tc4_pedido.gateway.database.entity.PagamentoEntity;
 import com.example.postech_tc4_pedido.gateway.database.entity.PedidoEntity;
 import com.example.postech_tc4_pedido.gateway.database.entity.ProdutoEntity;
+
+import com.example.postech_tc4_pedido.domain.Cliente;
+import com.example.postech_tc4_pedido.domain.Pagamento;
+import com.example.postech_tc4_pedido.domain.Pedido;
+import com.example.postech_tc4_pedido.domain.Produto;
+
 import com.example.postech_tc4_pedido.gateway.database.interfaces.IPedidoGateway;
 import org.springframework.stereotype.Service;
 
@@ -21,19 +27,22 @@ public class SalvarPedidoPendentePagamentoUseCase {
         this.pedidoGateway = pedidoGateway;
     }
 
-    public void salvar(PedidoDTO pedidoDTO, ClienteEntity cliente, List<ProdutoEntity> produtos, BigDecimal valorTotal) {
+    //public void salvar(PedidoDTO pedidoDTO, ClienteEntity cliente, List<ProdutoEntity> produtos, BigDecimal valorTotal) {
+    public void salvar(PedidoDTO pedidoDTO, Cliente cliente, List<Produto> produtos, BigDecimal valorTotal) {
         try {
-            var pagamentoEntity = new PagamentoEntity(pedidoDTO.dadosPagamento().numeroCartao());
-            var pedidoEntity = new PedidoEntity(
+            Pagamento pagamento = new Pagamento(pedidoDTO.dadosPagamento().numeroCartao());
+
+            Pedido pedido = new Pedido(
                     pedidoDTO.id(),
                     pedidoDTO.idEvento(),
                     cliente,
                     produtos,
-                    pagamentoEntity,
+                    pagamento,
                     StatusPedidoEnum.PENDENTE_PAGAMENTO,
                     valorTotal
             );
-            pedidoGateway.salvar(pedidoEntity);
+
+            pedidoGateway.salvar(pedido);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,8 +1,8 @@
 package com.example.postech_tc4_pedido.usecases;
 
+import com.example.postech_tc4_pedido.domain.Cliente;
+import com.example.postech_tc4_pedido.domain.Produto;
 import com.example.postech_tc4_pedido.dto.PedidoDTO;
-import com.example.postech_tc4_pedido.gateway.database.entity.ClienteEntity;
-import com.example.postech_tc4_pedido.gateway.database.entity.ProdutoEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,12 +43,12 @@ public class ProcessarPedidoUseCase {
             var valorTotal = calcularValorTotalPedidoUseCase.calcular(pedidoDTO);
 
             // #1: obtém dados do produto
-            List<ProdutoEntity> produtos = buscarProdutosUseCase.buscarPorSkus(pedidoDTO.produtos());
+            List<Produto> produtos = buscarProdutosUseCase.buscarPorSkus(pedidoDTO.produtos());
 
             // #2: obtém dados do cliente
             String cpf = pedidoDTO.cliente().cpf();
-            //ClienteEntity cliente = new ClienteEntity("Ana", "99999999999");
-            ClienteEntity cliente = buscarClienteUseCase.buscar(cpf);
+            Cliente cliente = new Cliente("Ana", "111");
+            //Cliente cliente = buscarClienteUseCase.buscar(cpf);
 
             // #3: baixa estoque
             boolean temEstoque = buscarEstoqueUseCase.verificarDisponibilidade(pedidoDTO);
@@ -60,7 +60,7 @@ public class ProcessarPedidoUseCase {
             baixarEstoqueUseCase.baixar(pedidoDTO);
 
             // #4: solicita pagamento
-            solicitarPagamentoUseCase.solicitar(pedidoDTO, valorTotal);
+            //solicitarPagamentoUseCase.solicitar(pedidoDTO, valorTotal);
 
             // #5: save
             // se tudo der certo nos passos anteriores, o pedido é salvo com o status PENDENTE_PAGAMENTO

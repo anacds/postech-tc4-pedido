@@ -21,29 +21,29 @@ public class AtualizarPagamentoUseCase {
 <span class="fc" id="L21">    }</span>
 
     public void atualizar(AtualizacaoPagamentoDTO dto) {
-<span class="nc" id="L24">        var pedidoBusca = pedidoGateway.buscarPorId(dto.pedidoId());</span>
+<span class="fc" id="L24">        var pedidoBusca = pedidoGateway.buscarPorId(dto.pedidoId());</span>
 
-<span class="nc bnc" id="L26" title="All 2 branches missed.">        if (pedidoBusca.isEmpty()) {</span>
-<span class="nc" id="L27">            throw new PedidoNaoEncontradoException(dto.pedidoId());</span>
+<span class="fc bfc" id="L26" title="All 2 branches covered.">        if (pedidoBusca.isEmpty()) {</span>
+<span class="fc" id="L27">            throw new PedidoNaoEncontradoException(dto.pedidoId());</span>
         }
 
-<span class="nc" id="L30">        var pedido = pedidoBusca.get();</span>
-<span class="nc bnc" id="L31" title="All 2 branches missed.">        if (dto.statusPagamento().equals(&quot;PROCESSADO_SUCESSO&quot;)) {</span>
-<span class="nc" id="L32">            pedido.setStatus(StatusPedidoEnum.FECHADO_COM_SUCESSO);</span>
+<span class="fc" id="L30">        var pedido = pedidoBusca.get();</span>
+<span class="fc bfc" id="L31" title="All 2 branches covered.">        if (dto.statusPagamento().equals(&quot;PROCESSADO_SUCESSO&quot;)) {</span>
+<span class="fc" id="L32">            pedido.setStatus(StatusPedidoEnum.FECHADO_COM_SUCESSO);</span>
         } else {
-<span class="nc" id="L34">            pedido.getProdutos().forEach(produto -&gt;</span>
-<span class="nc" id="L35">                    estoqueGateway.reporEstoque(produto.getSku(), produto.getQuantidade())</span>
+<span class="fc" id="L34">            pedido.getProdutos().forEach(produto -&gt;</span>
+<span class="fc" id="L35">                    estoqueGateway.reporEstoque(produto.getSku(), produto.getQuantidade())</span>
             );
 
-<span class="nc bnc" id="L38" title="All 2 branches missed.">            if(dto.statusPagamento().equals(&quot;PROCESSADO_SEM_CREDITO&quot;)) {</span>
-<span class="nc" id="L39">                pedido.setStatus(StatusPedidoEnum.FECHADO_SEM_CREDITO);</span>
+<span class="pc bpc" id="L38" title="1 of 2 branches missed.">            if(dto.statusPagamento().equals(&quot;PROCESSADO_SEM_CREDITO&quot;)) {</span>
+<span class="fc" id="L39">                pedido.setStatus(StatusPedidoEnum.FECHADO_SEM_CREDITO);</span>
             } else {
 <span class="nc" id="L41">                pedido.setStatus(StatusPedidoEnum.FECHADO_ERRO_PAGAMENTO);</span>
             }
         }
 
-<span class="nc" id="L45">        pedidoGateway.salvar(pedido);</span>
-<span class="nc" id="L46">    }</span>
+<span class="fc" id="L45">        pedidoGateway.salvar(pedido);</span>
+<span class="fc" id="L46">    }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

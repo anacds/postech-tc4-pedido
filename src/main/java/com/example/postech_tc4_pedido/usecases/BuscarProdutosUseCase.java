@@ -1,7 +1,7 @@
 package com.example.postech_tc4_pedido.usecases;
 
+import com.example.postech_tc4_pedido.domain.Produto;
 import com.example.postech_tc4_pedido.dto.ProdutoDTO;
-import com.example.postech_tc4_pedido.gateway.database.entity.ProdutoEntity;
 import com.example.postech_tc4_pedido.gateway.external.interfaces.IProdutoGateway;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +16,12 @@ public class BuscarProdutosUseCase {
         this.produtoGateway = produtoGateway;
     }
 
-    public List<ProdutoEntity> buscarPorSkus(List<ProdutoDTO> produtosDTO) {
+    public List<Produto> buscarPorSkus(List<ProdutoDTO> produtosDTO) {
         try {
             return produtosDTO.stream()
                     .map(produtoDTO -> {
                         var p = produtoGateway.buscarProdutoPorSku(produtoDTO.sku());
-                        return new ProdutoEntity(
+                        return new Produto(
                                 p.sku(),
                                 produtoDTO.quantidade(),
                                 p.nome(),
