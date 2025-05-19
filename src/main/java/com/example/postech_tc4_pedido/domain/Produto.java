@@ -16,6 +16,11 @@ public class Produto {
 
     public Produto(String sku, int quantidade, String nome, String codigoDeBarras,
                    String descricao, String fabricante, BigDecimal preco, String categoria) {
+
+        if (quantidade <= 0) {
+            throw new QuantidadeProdutoException();
+        }
+
         this.sku = sku;
         this.quantidade = quantidade;
         this.nome = nome;
@@ -56,11 +61,5 @@ public class Produto {
 
     public String getCategoria() {
         return categoria;
-    }
-
-    public void validaQuantidadeProduto(int quantidadeProduto) throws QuantidadeProdutoException {
-        if (quantidadeProduto < 0) {
-            throw new QuantidadeProdutoException("A quantidade do produto não pode ser zerada ou negativa.");
-        }
     }
 }

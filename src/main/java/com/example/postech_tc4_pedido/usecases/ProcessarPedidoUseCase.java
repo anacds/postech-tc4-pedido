@@ -47,8 +47,8 @@ public class ProcessarPedidoUseCase {
 
             // #2: obtém dados do cliente
             String cpf = pedidoDTO.cliente().cpf();
-            Cliente cliente = new Cliente("Ana", "111");
-            //Cliente cliente = buscarClienteUseCase.buscar(cpf);
+            //Cliente cliente = new Cliente("Ana", "111");
+            Cliente cliente = buscarClienteUseCase.buscar(cpf);
 
             // #3: baixa estoque
             boolean temEstoque = buscarEstoqueUseCase.verificarDisponibilidade(pedidoDTO);
@@ -60,7 +60,7 @@ public class ProcessarPedidoUseCase {
             baixarEstoqueUseCase.baixar(pedidoDTO);
 
             // #4: solicita pagamento
-            //solicitarPagamentoUseCase.solicitar(pedidoDTO, valorTotal);
+            solicitarPagamentoUseCase.solicitar(pedidoDTO, valorTotal);
 
             // #5: save
             // se tudo der certo nos passos anteriores, o pedido é salvo com o status PENDENTE_PAGAMENTO

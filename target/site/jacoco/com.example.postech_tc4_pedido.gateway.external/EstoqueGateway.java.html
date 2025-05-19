@@ -17,18 +17,18 @@ public class EstoqueGateway implements IEstoqueGateway {
 
     @Override
     public int verificarQuantidadeDisponivel(String sku) {
-<span class="nc" id="L20">        return feignClient.verificarQuantidadeDisponivel(sku);</span>
+<span class="fc" id="L20">        return feignClient.verificarQuantidadeDisponivel(sku);</span>
     }
 
     @Override
     public void removerDoEstoque(String sku, int quantidade) {
-<span class="nc" id="L25">        feignClient.removerDoEstoque(sku, quantidade);</span>
-<span class="nc" id="L26">    }</span>
+<span class="fc" id="L25">        feignClient.removerDoEstoque(sku, quantidade);</span>
+<span class="fc" id="L26">    }</span>
 
     @Override
     public void reporEstoque(String sku, int quantidade) {
-<span class="nc" id="L30">        feignClient.reporEstoque(sku, quantidade);</span>
-<span class="nc" id="L31">    }</span>
+<span class="fc" id="L30">        feignClient.reporEstoque(sku, quantidade);</span>
+<span class="fc" id="L31">    }</span>
 
 
 }

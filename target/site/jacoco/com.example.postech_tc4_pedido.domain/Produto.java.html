@@ -16,52 +16,51 @@ public class Produto {
 
     public Produto(String sku, int quantidade, String nome, String codigoDeBarras,
 <span class="fc" id="L18">                   String descricao, String fabricante, BigDecimal preco, String categoria) {</span>
-<span class="fc" id="L19">        this.sku = sku;</span>
-<span class="fc" id="L20">        this.quantidade = quantidade;</span>
-<span class="fc" id="L21">        this.nome = nome;</span>
-<span class="fc" id="L22">        this.codigoDeBarras = codigoDeBarras;</span>
-<span class="fc" id="L23">        this.descricao = descricao;</span>
-<span class="fc" id="L24">        this.fabricante = fabricante;</span>
-<span class="fc" id="L25">        this.preco = preco;</span>
-<span class="fc" id="L26">        this.categoria = categoria;</span>
-<span class="fc" id="L27">    }</span>
+
+<span class="fc bfc" id="L20" title="All 2 branches covered.">        if (quantidade &lt;= 0) {</span>
+<span class="fc" id="L21">            throw new QuantidadeProdutoException();</span>
+        }
+
+<span class="fc" id="L24">        this.sku = sku;</span>
+<span class="fc" id="L25">        this.quantidade = quantidade;</span>
+<span class="fc" id="L26">        this.nome = nome;</span>
+<span class="fc" id="L27">        this.codigoDeBarras = codigoDeBarras;</span>
+<span class="fc" id="L28">        this.descricao = descricao;</span>
+<span class="fc" id="L29">        this.fabricante = fabricante;</span>
+<span class="fc" id="L30">        this.preco = preco;</span>
+<span class="fc" id="L31">        this.categoria = categoria;</span>
+<span class="fc" id="L32">    }</span>
 
     public String getSku() {
-<span class="fc" id="L30">        return sku;</span>
+<span class="fc" id="L35">        return sku;</span>
     }
 
     public int getQuantidade() {
-<span class="fc" id="L34">        return quantidade;</span>
+<span class="fc" id="L39">        return quantidade;</span>
     }
 
     public String getNome() {
-<span class="fc" id="L38">        return nome;</span>
+<span class="fc" id="L43">        return nome;</span>
     }
 
     public String getCodigoDeBarras() {
-<span class="fc" id="L42">        return codigoDeBarras;</span>
+<span class="fc" id="L47">        return codigoDeBarras;</span>
     }
 
     public String getDescricao() {
-<span class="fc" id="L46">        return descricao;</span>
+<span class="fc" id="L51">        return descricao;</span>
     }
 
     public String getFabricante() {
-<span class="fc" id="L50">        return fabricante;</span>
+<span class="fc" id="L55">        return fabricante;</span>
     }
 
     public BigDecimal getPreco() {
-<span class="fc" id="L54">        return preco;</span>
+<span class="fc" id="L59">        return preco;</span>
     }
 
     public String getCategoria() {
-<span class="fc" id="L58">        return categoria;</span>
+<span class="fc" id="L63">        return categoria;</span>
     }
-
-    public void validaQuantidadeProduto(int quantidadeProduto) throws QuantidadeProdutoException {
-<span class="pc bpc" id="L62" title="1 of 2 branches missed.">        if (quantidadeProduto &lt; 0) {</span>
-<span class="fc" id="L63">            throw new QuantidadeProdutoException(&quot;A quantidade do produto não pode ser zerada ou negativa.&quot;);</span>
-        }
-<span class="nc" id="L65">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

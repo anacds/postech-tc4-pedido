@@ -9,6 +9,11 @@
 /Users/anasilva/Documents/Java projects/postech-tc4-pedido/src/test/java/com/example/postech_tc4_pedido/domain/StatusPedidoEnumTest.java
 /Users/anasilva/Documents/Java projects/postech-tc4-pedido/src/test/java/com/example/postech_tc4_pedido/exception/PedidoNaoEncontradoExceptionTest.java
 /Users/anasilva/Documents/Java projects/postech-tc4-pedido/src/test/java/com/example/postech_tc4_pedido/exception/QuantidadeProdutoExceptionTest.java
+/Users/anasilva/Documents/Java projects/postech-tc4-pedido/src/test/java/com/example/postech_tc4_pedido/gateway/database/PedidoGatewayTest.java
+/Users/anasilva/Documents/Java projects/postech-tc4-pedido/src/test/java/com/example/postech_tc4_pedido/gateway/external/ClienteGatewayTest.java
+/Users/anasilva/Documents/Java projects/postech-tc4-pedido/src/test/java/com/example/postech_tc4_pedido/gateway/external/EstoqueGatewayTest.java
+/Users/anasilva/Documents/Java projects/postech-tc4-pedido/src/test/java/com/example/postech_tc4_pedido/gateway/external/PagamentoGatewayTest.java
+/Users/anasilva/Documents/Java projects/postech-tc4-pedido/src/test/java/com/example/postech_tc4_pedido/gateway/external/ProdutoGatewayTest.java
 /Users/anasilva/Documents/Java projects/postech-tc4-pedido/src/test/java/com/example/postech_tc4_pedido/gateway/kafka/PedidoConsumerTest.java
 /Users/anasilva/Documents/Java projects/postech-tc4-pedido/src/test/java/com/example/postech_tc4_pedido/usecases/AtualizarPagamentoUseCaseTest.java
 /Users/anasilva/Documents/Java projects/postech-tc4-pedido/src/test/java/com/example/postech_tc4_pedido/usecases/BaixarEstoqueUseCaseTest.java
